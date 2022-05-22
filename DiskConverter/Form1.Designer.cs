@@ -65,6 +65,10 @@
             this.pictureBox5 = new System.Windows.Forms.PictureBox();
             this.schijfgiant = new System.Windows.Forms.Label();
             this.pictureBox3 = new System.Windows.Forms.PictureBox();
+            this.Fromlabel = new System.Windows.Forms.Label();
+            this.Tolabel = new System.Windows.Forms.Label();
+            this.speedlabel = new System.Windows.Forms.Label();
+            this.speedwordlabel = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox5)).BeginInit();
@@ -74,7 +78,7 @@
             // inputbutton
             // 
             this.inputbutton.Font = new System.Drawing.Font("Segoe UI Semibold", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.inputbutton.Location = new System.Drawing.Point(92, 5);
+            this.inputbutton.Location = new System.Drawing.Point(100, 167);
             this.inputbutton.Name = "inputbutton";
             this.inputbutton.Size = new System.Drawing.Size(143, 38);
             this.inputbutton.TabIndex = 0;
@@ -85,7 +89,7 @@
             // targetbutton
             // 
             this.targetbutton.Font = new System.Drawing.Font("Segoe UI Semibold", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.targetbutton.Location = new System.Drawing.Point(418, 5);
+            this.targetbutton.Location = new System.Drawing.Point(396, 167);
             this.targetbutton.Name = "targetbutton";
             this.targetbutton.Size = new System.Drawing.Size(147, 38);
             this.targetbutton.TabIndex = 1;
@@ -96,10 +100,10 @@
             // inputlabel
             // 
             this.inputlabel.AutoSize = true;
-            this.inputlabel.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.inputlabel.Location = new System.Drawing.Point(73, 44);
+            this.inputlabel.Font = new System.Drawing.Font("Segoe UI", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.inputlabel.Location = new System.Drawing.Point(121, 19);
             this.inputlabel.Name = "inputlabel";
-            this.inputlabel.Size = new System.Drawing.Size(13, 20);
+            this.inputlabel.Size = new System.Drawing.Size(12, 17);
             this.inputlabel.TabIndex = 2;
             this.inputlabel.Text = " ";
             this.inputlabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
@@ -107,11 +111,11 @@
             // targetlabel
             // 
             this.targetlabel.AutoSize = true;
-            this.targetlabel.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.targetlabel.Location = new System.Drawing.Point(418, 44);
+            this.targetlabel.Font = new System.Drawing.Font("Segoe UI", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.targetlabel.Location = new System.Drawing.Point(116, 44);
             this.targetlabel.Name = "targetlabel";
             this.targetlabel.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.targetlabel.Size = new System.Drawing.Size(13, 20);
+            this.targetlabel.Size = new System.Drawing.Size(12, 17);
             this.targetlabel.TabIndex = 3;
             this.targetlabel.Text = " ";
             this.targetlabel.Click += new System.EventHandler(this.targetlabel_Click);
@@ -119,23 +123,24 @@
             // convertbutton
             // 
             this.convertbutton.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.convertbutton.Location = new System.Drawing.Point(291, 176);
+            this.convertbutton.Location = new System.Drawing.Point(212, 231);
             this.convertbutton.Name = "convertbutton";
-            this.convertbutton.Size = new System.Drawing.Size(165, 29);
+            this.convertbutton.Size = new System.Drawing.Size(228, 29);
             this.convertbutton.TabIndex = 4;
             this.convertbutton.Text = "Convert!";
             this.convertbutton.UseVisualStyleBackColor = true;
             this.convertbutton.Visible = false;
             this.convertbutton.Click += new System.EventHandler(this.convertbutton_Click);
+            this.convertbutton.MouseDown += new System.Windows.Forms.MouseEventHandler(this.convertbutton_MouseDown);
             // 
             // donebutton
             // 
             this.donebutton.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.donebutton.Location = new System.Drawing.Point(714, 5);
+            this.donebutton.Location = new System.Drawing.Point(660, 19);
             this.donebutton.Name = "donebutton";
-            this.donebutton.Size = new System.Drawing.Size(68, 38);
+            this.donebutton.Size = new System.Drawing.Size(146, 30);
             this.donebutton.TabIndex = 6;
-            this.donebutton.Text = "Exit";
+            this.donebutton.Text = "Stop";
             this.donebutton.UseVisualStyleBackColor = true;
             this.donebutton.Click += new System.EventHandler(this.donebutton_Click);
             // 
@@ -272,7 +277,7 @@
             // 
             // totalBar
             // 
-            this.totalBar.Location = new System.Drawing.Point(50, 176);
+            this.totalBar.Location = new System.Drawing.Point(55, 172);
             this.totalBar.Name = "totalBar";
             this.totalBar.Size = new System.Drawing.Size(622, 29);
             this.totalBar.TabIndex = 23;
@@ -290,7 +295,7 @@
             // currentFil
             // 
             this.currentFil.AutoSize = true;
-            this.currentFil.Location = new System.Drawing.Point(100, 94);
+            this.currentFil.Location = new System.Drawing.Point(73, 92);
             this.currentFil.Name = "currentFil";
             this.currentFil.Size = new System.Drawing.Size(0, 20);
             this.currentFil.TabIndex = 25;
@@ -298,7 +303,7 @@
             // currentproglabel
             // 
             this.currentproglabel.AutoSize = true;
-            this.currentproglabel.Location = new System.Drawing.Point(351, 93);
+            this.currentproglabel.Location = new System.Drawing.Point(73, 119);
             this.currentproglabel.Name = "currentproglabel";
             this.currentproglabel.Size = new System.Drawing.Size(0, 20);
             this.currentproglabel.TabIndex = 26;
@@ -318,7 +323,7 @@
             // 
             this.etawordlabel.AutoSize = true;
             this.etawordlabel.Font = new System.Drawing.Font("Segoe UI Semibold", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.etawordlabel.Location = new System.Drawing.Point(39, 393);
+            this.etawordlabel.Location = new System.Drawing.Point(58, 394);
             this.etawordlabel.Name = "etawordlabel";
             this.etawordlabel.Size = new System.Drawing.Size(71, 17);
             this.etawordlabel.TabIndex = 29;
@@ -329,7 +334,7 @@
             // 
             this.etalabel.AutoSize = true;
             this.etalabel.Font = new System.Drawing.Font("Segoe UI", 7.8F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point);
-            this.etalabel.Location = new System.Drawing.Point(116, 392);
+            this.etalabel.Location = new System.Drawing.Point(135, 393);
             this.etalabel.Name = "etalabel";
             this.etalabel.Size = new System.Drawing.Size(74, 17);
             this.etalabel.TabIndex = 30;
@@ -374,7 +379,7 @@
             // pictureBox1
             // 
             this.pictureBox1.Image = global::DiskConverter.Properties.Resources.prores_logo;
-            this.pictureBox1.Location = new System.Drawing.Point(756, 359);
+            this.pictureBox1.Location = new System.Drawing.Point(756, 380);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(72, 51);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -384,7 +389,7 @@
             // pictureBox2
             // 
             this.pictureBox2.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox2.Image")));
-            this.pictureBox2.Location = new System.Drawing.Point(760, 331);
+            this.pictureBox2.Location = new System.Drawing.Point(760, 345);
             this.pictureBox2.Name = "pictureBox2";
             this.pictureBox2.Size = new System.Drawing.Size(59, 27);
             this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -394,7 +399,7 @@
             // pictureBox5
             // 
             this.pictureBox5.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox5.Image")));
-            this.pictureBox5.Location = new System.Drawing.Point(760, 408);
+            this.pictureBox5.Location = new System.Drawing.Point(758, 436);
             this.pictureBox5.Name = "pictureBox5";
             this.pictureBox5.Size = new System.Drawing.Size(68, 30);
             this.pictureBox5.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -406,7 +411,7 @@
             this.schijfgiant.AutoSize = true;
             this.schijfgiant.Font = new System.Drawing.Font("Segoe UI", 28.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.schijfgiant.ForeColor = System.Drawing.SystemColors.WindowFrame;
-            this.schijfgiant.Location = new System.Drawing.Point(525, 393);
+            this.schijfgiant.Location = new System.Drawing.Point(543, 404);
             this.schijfgiant.Name = "schijfgiant";
             this.schijfgiant.Size = new System.Drawing.Size(0, 62);
             this.schijfgiant.TabIndex = 39;
@@ -415,20 +420,66 @@
             // 
             this.pictureBox3.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.pictureBox3.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox3.Image")));
-            this.pictureBox3.Location = new System.Drawing.Point(-2, -4);
+            this.pictureBox3.Location = new System.Drawing.Point(12, 281);
             this.pictureBox3.Name = "pictureBox3";
-            this.pictureBox3.Size = new System.Drawing.Size(848, 459);
+            this.pictureBox3.Size = new System.Drawing.Size(848, 479);
             this.pictureBox3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pictureBox3.TabIndex = 40;
             this.pictureBox3.TabStop = false;
+            // 
+            // Fromlabel
+            // 
+            this.Fromlabel.AutoSize = true;
+            this.Fromlabel.Font = new System.Drawing.Font("Segoe UI", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.Fromlabel.Location = new System.Drawing.Point(73, 19);
+            this.Fromlabel.Name = "Fromlabel";
+            this.Fromlabel.Size = new System.Drawing.Size(44, 17);
+            this.Fromlabel.TabIndex = 41;
+            this.Fromlabel.Text = "From:";
+            // 
+            // Tolabel
+            // 
+            this.Tolabel.AutoSize = true;
+            this.Tolabel.Font = new System.Drawing.Font("Segoe UI", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.Tolabel.Location = new System.Drawing.Point(73, 44);
+            this.Tolabel.Name = "Tolabel";
+            this.Tolabel.Size = new System.Drawing.Size(27, 17);
+            this.Tolabel.TabIndex = 42;
+            this.Tolabel.Text = "To:";
+            // 
+            // speedlabel
+            // 
+            this.speedlabel.AutoSize = true;
+            this.speedlabel.Font = new System.Drawing.Font("Segoe UI", 7.8F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point);
+            this.speedlabel.Location = new System.Drawing.Point(416, 394);
+            this.speedlabel.Name = "speedlabel";
+            this.speedlabel.Size = new System.Drawing.Size(77, 17);
+            this.speedlabel.TabIndex = 44;
+            this.speedlabel.Text = "calculating...";
+            this.speedlabel.Visible = false;
+            // 
+            // speedwordlabel
+            // 
+            this.speedwordlabel.AutoSize = true;
+            this.speedwordlabel.Font = new System.Drawing.Font("Segoe UI Semibold", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.speedwordlabel.Location = new System.Drawing.Point(309, 394);
+            this.speedwordlabel.Name = "speedwordlabel";
+            this.speedwordlabel.Size = new System.Drawing.Size(97, 17);
+            this.speedwordlabel.TabIndex = 43;
+            this.speedwordlabel.Text = "Current speed:";
+            this.speedwordlabel.Visible = false;
             // 
             // windowcase
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.ClientSize = new System.Drawing.Size(840, 450);
+            this.ClientSize = new System.Drawing.Size(840, 476);
             this.Controls.Add(this.pictureBox3);
+            this.Controls.Add(this.speedlabel);
+            this.Controls.Add(this.speedwordlabel);
+            this.Controls.Add(this.Tolabel);
+            this.Controls.Add(this.Fromlabel);
             this.Controls.Add(this.pictureBox5);
             this.Controls.Add(this.currentFil);
             this.Controls.Add(this.schijfgiant);
@@ -512,5 +563,9 @@
         private PictureBox pictureBox5;
         private Label schijfgiant;
         private PictureBox pictureBox3;
+        private Label Fromlabel;
+        private Label Tolabel;
+        private Label speedlabel;
+        private Label speedwordlabel;
     }
 }

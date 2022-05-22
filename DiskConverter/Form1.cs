@@ -79,7 +79,7 @@ namespace DiskConverter
             if (requestedBar.InvokeRequired)
             {
                 requestedBar.BeginInvoke((MethodInvoker)delegate () { if (visswitch) { requestedBar.Visible = showhide; } else {
-                        if (value > 100) { requestedBar.Value = 100; } else if (value < 0) { requestedBar.Value = 0; } else requestedBar.Value = value; }; });
+                        if (value > 100) { requestedBar.Value = 100; } else if (value < 0) { requestedBar.Value = 0; } else requestedBar.Value = (int)value; }; });
             }
             else
             {
@@ -158,8 +158,12 @@ namespace DiskConverter
 
         private async void convertbutton_Click(object sender, EventArgs e)
         {
+            
+            Cursor.Current = Cursors.WaitCursor;
             currentFil.Text = "Calculating...";
             etawordlabel.Visible = true;
+            speedlabel.Visible = true;
+            speedwordlabel.Visible = true;
             inputbutton.Visible = false;
             convertbutton.Visible = false;
             targetlabel.Visible = true;
@@ -169,12 +173,13 @@ namespace DiskConverter
             Semaphore semaphoreObject = new Semaphore(initialCount: 0, maximumCount: 5);
             changeLabel(currentFil, "Copying folders and small files...");
             long mp4bytes = 0;
-            
-            
+            long[] clipbytes = new long[5] {0,0,0,0,0};
+            double[] speedsarray = new double[5] { 0.0, 0.0, 0.0, 0.0, 0.0 };
+
             totalBar.Visible = true;
             totalproglabel.Visible = true;
         
-            Thread.Sleep(300);
+            
             List<string> bigfiles = new List<string>(Directory.GetFiles(source, "*.*",SearchOption.AllDirectories).SkipWhile(name=> 
                 Path.GetExtension(name)==".pek" ||
                 Path.GetExtension(name) == ".BIN" ||
@@ -187,7 +192,7 @@ namespace DiskConverter
             };
        
 
-            
+            Cursor.Current = Cursors.Default;
             changeLabel(currentFil,"Copying non-video files...");
            
 
@@ -198,17 +203,20 @@ namespace DiskConverter
             RoboCommand roboCMD  = new();
             roboCMD.CopyOptions = copt;
             roboCMD.CopyOptions.CopySubdirectoriesIncludingEmpty = true;
-            roboCMD.SelectionOptions.ExcludeFiles = "*.mov *.pek *.BIN $.*";
-            roboCMD.SelectionOptions.ExcludeAttributes = "h";
+            roboCMD.SelectionOptions.ExcludeFiles = "*.mov *.pek *RECYCLE.BIN";
+            roboCMD.SelectionOptions.ExcludeAttributes = "S H T";
             roboCMD.OnFileProcessed += currentCopyHanler;
             roboCMD.OnCopyProgressChanged += copyprogresHandler;
             roboCMD.OnCommandCompleted += copyFileFinishHandler;
+            Application.UseWaitCursor = false;
+            Cursor.Current = Cursors.Default;
+
             if (!onlymovs)
             {
                 await roboCMD.Start();
             }
 
-
+            DateTime startTime = DateTime.Now;
 
 
             ProgressBar[] progressbars = {
@@ -219,7 +227,7 @@ namespace DiskConverter
                 progressBar5
             };
 
-
+            Semaphore semafoor = new Semaphore(0, 1);
 
             
             etalabel.Visible = true;
@@ -257,7 +265,7 @@ namespace DiskConverter
                     case 4: filelabel = file5label; progressbarnow = progressBar5; proglabel = proglabel5; break;
                 };
                 
-                changeLabel(filelabel, item);
+                changeLabel(filelabel, item.Length > 65 ? item.Substring(item.Length-65) : item);
                 changeProgress(progressbarnow,0, true, true);
                 
                 IMediaInfo mediaInfo = await FFmpeg.GetMediaInfo(item);
@@ -274,12 +282,30 @@ namespace DiskConverter
                 IStream audioStream = (IStream)mediaInfo.AudioStreams.FirstOrDefault()?.SetCodec(AudioCodec.aac).SetChannels(2);
 
                 IConversion conversion = convertMov(item, audioStream, videoStream);
-                
+
+                string output = item.Replace(Path.GetFullPath(source), Path.GetFullPath(target));
+
+                string arguments = $" -hwaccel_device 1 -hwaccel auto -i \"{item}\" -c:v h264 -pix_fmt yuv422p -strict experimental -preset ultrafast -crf 23 -aac_coder fast -coder 0 -tune fastdecode -g 10-ref 3 -threads 6 -ac 2 -c:a aac -map 0 \"{output}\"";
+
+                //MessageBox.Show($" -hwaccel_device 1 -hwaccel auto -i {item} -c:v h264 -pix_fmt yuv422p10le -strict experimental -preset ultrafast -b 20000k -crf 23 -coder 0 -threads 6 -ac 2 -c:a aac -map 0 {output}");
+
                 conversion.OnProgress += (sender, args) =>
                 {
-                    var percent = (int)(Math.Round(args.Duration.TotalSeconds / args.TotalLength.TotalSeconds, 2) * 100);
-                    changeLabel(proglabel, percent.ToString() + "%");
-                    changeProgress(progressbarnow, (int)percent,false,false);
+                    double passedseconds = Math.Abs((startTime - DateTime.Now).TotalSeconds);
+                    speedsarray[mytrem] = (double)args.Duration.TotalSeconds / passedseconds;
+                    if (mytrem == 1 || mytrem == 3) { changeLabel(speedlabel, Math.Round(speedsarray.Aggregate((a,b)=>(a+b)), 2).ToString() + "×"); };
+                    var percent = (double)Math.Round(args.Duration.TotalSeconds / args.TotalLength.TotalSeconds, 2) * 100;
+                    clipbytes[mytrem] = (long)(percent * mediaInfo.Size);
+                    changeLabel(proglabel, Math.Round(percent,0).ToString() + "%");
+                    changeProgress(progressbarnow, (int)Math.Round(percent, 0), false, false);
+                    double tempprog = (double)((donebytes + (long)clipbytes.Aggregate((a, b) => a + b)) / total);
+                    if ((int)tempprog > totalBar.Value) {
+                        changeLabel(totalproglabel, tempprog.ToString("0.00", new System.Globalization.CultureInfo("en-US", false)) + "%");
+                        changeProgress(totalBar, (int)tempprog, false, false);
+                        };
+
+
+
                 };
 
 
@@ -288,7 +314,7 @@ namespace DiskConverter
 
 
 
-                IConversionResult conversionResult = await conversion.Start(cancelsource.Token);
+                IConversionResult conversionResult = await conversion.Start(arguments,cancelsource.Token);
                 
                
                 bag.Add(item);
@@ -303,11 +329,11 @@ namespace DiskConverter
                 TimeSpan estimated = TimeSpan.FromSeconds(((long)(total - donebytes - mp4bytes) / bytespersecond)/4);
                 if (estimated.TotalSeconds > 0)
                 {
-                    changeLabel(etalabel, Math.Floor(estimated.TotalHours) + " uur, " + estimated.Minutes + " minuten...   Speed: "+Math.Round((double)(conversionResult.Duration.TotalSeconds/mediaInfo.Duration.TotalSeconds),2).ToString() + "×");
+                    changeLabel(etalabel, Math.Floor(estimated.TotalHours) + " uur, " + estimated.Minutes + " minuten.");
                 };
                 changeLabel(totalproglabel, totalprocent.ToString("0.00", new System.Globalization.CultureInfo("en-US", false)) + "%");
                 changeProgress(totalBar, (int)totalprocent, false, false);
-           
+                    
                 
                 changeProgress(progressbarnow, 0, true, false);
                 changeProgress(progressbars[mytrem], 0, true, false);
@@ -329,22 +355,23 @@ namespace DiskConverter
 
         IConversion convertMov(string vid, IStream audioStream, IStream videoStream) {
 
-           // return FFmpeg.Conversions(vid, vid.Replace(Path.GetFullPath(source), Path.GetFullPath(target)));
+            // return FFmpeg.Conversions(vid, vid.Replace(Path.GetFullPath(source), Path.GetFullPath(target)));
 
 
 
-            return FFmpeg.Conversions.New()
+            return FFmpeg.Conversions.New();
                 
-                .AddStream(audioStream, videoStream)
-                .SetPriority(ProcessPriorityClass.BelowNormal)
-                .SetPixelFormat(PixelFormat.yuv420p10le)
-                .AddParameter("-tune fastdecode")
-                .SetPreset(ConversionPreset.VeryFast)
-                .AddParameter("-g 10 -c:v h264 -ac 2 ")
-                .AddParameter("-crf 24 -threads 5")
-                .AddParameter(" -hwaccel_device 1 -hwaccel auto", ParameterPosition.PreInput)
-                .SetOutputFormat(Format.mov)
-                .SetOutput(vid.Replace(Path.GetFullPath(source), Path.GetFullPath(target)));
+                
+                //.AddStream(audioStream, videoStream)
+                //.SetPriority(ProcessPriorityClass.BelowNormal)
+                //.SetPixelFormat(PixelFormat.yuv420p10le)
+                //.AddParameter("-tune fastdecode")
+                //.SetPreset(ConversionPreset.VeryFast)
+                //.AddParameter("-g 10 -c:v h264 -ac 2 ")
+                //.AddParameter("-crf 24 -threads 5")
+                //.AddParameter(" -hwaccel_device 1 -hwaccel auto", ParameterPosition.PreInput)
+                //.SetOutputFormat(Format.mov)
+                //.SetOutput(vid.Replace(Path.GetFullPath(source), Path.GetFullPath(target)));
 
 
 
@@ -400,24 +427,17 @@ namespace DiskConverter
             onlymovs = !onlymovs;
         }
 
-        private void checkBox3_CheckedChanged(object sender, EventArgs e)
-        {
-            lowmovement = !lowmovement;
-        }
-
-        private void pictureBox3_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void pictureBox3_Click_1(object sender, EventArgs e)
-        {
-
-        }
+       
 
         private void targetlabel_Click(object sender, EventArgs e)
         {
             Process.Start("explorer.exe", @targetlabel.Text);
         }
+
+        private void convertbutton_MouseDown(object sender, MouseEventArgs e)
+        {
+            Application.UseWaitCursor = true;
+        }
     }
 }
+
