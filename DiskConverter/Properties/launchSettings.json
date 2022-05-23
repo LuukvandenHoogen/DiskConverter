@@ -1,0 +1,14 @@
+{
+  "profiles": {
+    "DiskConverter": {
+      "commandName": "Project",
+      "workingDirectory": "C:\\Users\\Luuk\\Desktop\\tmp",
+      "jsWebView2Debugging": false,
+      "hotReloadEnabled": false,
+      "nativeDebugging": false
+    },
+    "Profile 1": {
+      "commandName": "Executable"
+    }
+  }
+}
