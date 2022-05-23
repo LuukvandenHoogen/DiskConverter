@@ -35,6 +35,7 @@
 
   <ItemGroup>
     <PackageReference Include="AsyncEnumerator" Version="4.0.2" />
+    <PackageReference Include="DirectShowLib" Version="1.0.0" />
     <PackageReference Include="RoboSharp" Version="1.2.4" />
     <PackageReference Include="System.Runtime.WindowsRuntime" Version="4.7.0" />
     <PackageReference Include="Xabe.FFmpeg" Version="5.2.0" />

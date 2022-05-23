@@ -464,9 +464,9 @@
             this.speedwordlabel.Font = new System.Drawing.Font("Segoe UI Semibold", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.speedwordlabel.Location = new System.Drawing.Point(309, 394);
             this.speedwordlabel.Name = "speedwordlabel";
-            this.speedwordlabel.Size = new System.Drawing.Size(97, 17);
+            this.speedwordlabel.Size = new System.Drawing.Size(101, 17);
             this.speedwordlabel.TabIndex = 43;
-            this.speedwordlabel.Text = "Current speed:";
+            this.speedwordlabel.Text = "Average speed:";
             this.speedwordlabel.Visible = false;
             // 
             // windowcase
